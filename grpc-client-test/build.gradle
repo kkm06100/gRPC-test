@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.9.4'  // protobuf 플러그인
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.grpc:grpc-netty-shaded:1.55.1' // gRPC 네티 클라이언트
+    implementation 'io.grpc:grpc-protobuf:1.55.1'
+    implementation 'io.grpc:grpc-stub:1.55.1'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.24.3"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.55.1"
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                grpc {}
+            }
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/java', 'build/generated/source/proto/main/grpc'
+        }
+    }
+}
